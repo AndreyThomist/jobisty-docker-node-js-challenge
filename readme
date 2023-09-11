@@ -1,0 +1,37 @@
+# START APPLICATION 📜
+
+Clone the Repository(OR Download the the entire zip with the three folders)
+The three folders must be inside a folder
+UNCOMMENT THE .ENV.EXAMPLE inside api-service and stock-service
+For Simplicity, i already added the user and password that will match de docker-compose.yml wil create
+Feel free to add a different JWT_SECRET and PASSWORD_SALT if you want to.
+CD inside the project-docker
+
+Run - 
+docker-compose up --build = to build the project, it should create 3 containers(POSTGRES, api-service, project-docker)
+------------------------------------------------------------------------------------------------------------------------------------------
+Open in your browser 127.0.0.1:3001 then it should say the server is working
+------------------------------------------------------------------------------------------------------------------------------------------
+
+SWAGGER:
+for simplicity i added a simple swagger for doing the requests that alsos enables you to add the Bearer JWT_TOKEN;
+with the application running open in the browser
+127.0.0.1:3001/api(or local)
+------------------------------------------------------------------------------------------------------------------------------------------
+
+DONE:
+    A user makes a request asking for Nasdaq's current Stock quote: GET /stock?q=ndq
+    The API service calls the stock service to retrieve the requested stock information
+    The stock service delegates the call to the external API, parses the response and returns the information back to the API service.
+    The API service saves the response from the stock service in the database.
+    The data is formatted and returned to the user.
+    Use JWT instead of basic authentication for endpoints.
+    Use containers to orchestrate the services.
+    Use OpenAPI/Swagger to document the API.
+IMPROVEMENTS(THAT I COULD BE DONE, IF HAD MORE TIME TO KEEP IMPLEMENTING):
+    ADD TESTS
+    ADD ENV TO DOCKER CONTAINERS
+    ADD ANOTHER INSTANCE OF POSTGRES FOR STOCK-SERVICE(SINCE IT IS A GOOD PRATICE FOR MICROSERVICES HAVE ITS OWN DATABASE SEPARATED FROM OTHERS SERVICES)
+    CREATE A GUARD FOR ROLES(SINCE IT IS BEING USED IN ONLY ONE SERVICE I KEPT THE LOGIC IN THE api-service/stock.service but if we have more others since it would be good for reuse) 
+    ADD FILTER FOR REUSE microservice exceptions, or at least create an enum logic with a function to inject common microservices errors
+    
