@@ -3,7 +3,7 @@
 Clone the Repository(OR Download the the entire zip with the three folders)
 The three folders must be inside a folder
 UNCOMMENT THE .ENV.EXAMPLE inside api-service and stock-service
-For Simplicity, i already added the user and password that will match de docker-compose.yml wil create
+For Simplicity, i already added the user and password that will match the docker-compose.yml wil create
 Feel free to add a different JWT_SECRET and PASSWORD_SALT if you want to.
 CD inside the project-docker
 
