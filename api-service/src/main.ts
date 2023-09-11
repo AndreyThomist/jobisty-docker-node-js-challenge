@@ -15,6 +15,10 @@ async function bootstrap() {
     .setDescription('Api service')
     .setVersion('1.0')
     .addTag('stocks')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'JWT-SWAGGER',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

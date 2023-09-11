@@ -28,7 +28,7 @@ export class AuthService {
     if (foundEmail) {
       throw new ConflictException('Email already being used');
     }
-    const salt = 10;
+    const salt = process.env.PASSWORD_SALT;
     const hashPassword = await bcrypt.hash(password, salt);
     const temporaryCreatedUser = this.userRepository.create({
       email: email,

@@ -19,7 +19,6 @@ export class StockController {
       return updatedStock;
     }
     const stockCsvJson = await this.stockService.fetchStock(q);
-    console.log(stockCsvJson);
     if (stockCsvJson.Open === 'N/D') {
       return {
         error: true,
