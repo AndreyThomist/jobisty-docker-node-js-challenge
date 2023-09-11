@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - POSTGRES_PASSWORD=jobsity
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - shared
+  stock-services:
+    build:
+      context: ./../stock-service
+      dockerfile: ./../stock-service/stock-service.dockerfile
+    restart: always
+    environment:
+      - APP_ENV=production
+    ports:
+      - "3000:3000"
+    deploy:
+      mode: "replicated"
+      replicas: 1
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - shared
+  broker-services:
+    build:
+      context: ./../api-service
+      dockerfile: ./../api-service/api-service.dockerfile
+    restart: always
+    environment:
+      - APP_ENV=production
+    ports:
+      - "3001:3001"
+    deploy:
+      mode: "replicated"
+      replicas: 1
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - shared
+networks:
+  shared:
+    driver: bridge
+    name: shared_network
