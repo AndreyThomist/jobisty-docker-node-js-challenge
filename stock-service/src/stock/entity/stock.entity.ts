@@ -13,7 +13,7 @@ export class Stock {
   userId: string;
   @Column('varchar')
   symbol: string;
-  @Column('timestamptz')
+  @Column('timestamp without time zone')
   date: Date;
   @Column('varchar')
   open: string;

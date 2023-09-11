@@ -8,11 +8,8 @@ export class StockController {
   @UseGuards(JwtAuthGuard)
   @Get('/')
   public async getStocks(@Query('q') q: string, @Headers() headers) {
-    try {
-      return this.stockService.getStock(q, headers.authorization);
-    } catch (err) {
-      return err;
-    }
+    const stock = await this.stockService.getStock(q, headers.authorization);
+    return stock;
   }
   @UseGuards(JwtAuthGuard)
   @Get('/stats')

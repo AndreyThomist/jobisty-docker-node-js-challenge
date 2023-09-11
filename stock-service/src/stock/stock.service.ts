@@ -12,7 +12,7 @@ export class StockService {
   constructor(
     @InjectRepository(Stock)
     private readonly stockRepository: Repository<Stock>,
-  ) { }
+  ) {}
 
   fetchStock(q: string): Promise<StockDTO> {
     const endpoint = `https://stooq.com/q/l/?s=${q}&f=sd2t2ohlcvn&h&e=csv`;
@@ -55,13 +55,39 @@ export class StockService {
       .createQueryBuilder('stock')
       .select('lower(symbol) as stock,MAX(times_requested)', 'times_requested')
       .groupBy('stock')
-      .orderBy('stock', 'DESC')
+      .orderBy('times_requested', 'DESC')
       .limit(5)
       .getRawMany();
   }
 
-  private async findStockBySymbol(symbol: string) {
+  public async findStockBySymbol(symbol: string) {
     return this.stockRepository.findOne({ where: { symbol: symbol } });
+  }
+
+  public removeUnNeededStockProps(stock: Stock) {
+    delete stock.times_requested;
+    delete stock.userId;
+    delete stock.id;
+    delete stock.createdAt;
+  }
+
+  public async updateStock(stock: Stock) {
+    stock.times_requested++;
+    await this.stockRepository.update({ id: stock.id }, stock);
+    return await this.stockRepository.findOne({
+      where: {
+        symbol: stock.symbol,
+      },
+      select: {
+        name: true,
+        close: true,
+        date: true,
+        low: true,
+        high: true,
+        symbol: true,
+        open: true,
+      },
+    });
   }
 
   async saveStock({
@@ -72,33 +98,22 @@ export class StockService {
     Low: low,
     Open: open,
     Symbol: symbol,
+    Time: time,
     userId,
   }: StockDTO) {
-    try {
-      const stockExists = await this.findStockBySymbol(symbol);
-      if (!stockExists) {
-        const stock = this.stockRepository.create({
-          symbol,
-          name,
-          close,
-          low,
-          open,
-          date: new Date(date),
-          high,
-          userId,
-          times_requested: 1,
-        });
-        await this.stockRepository.save(stock);
-        delete stock.times_requested;
-        return stock;
-      }
-      stockExists.times_requested++;
-      await this.stockRepository.save(stockExists);
-      delete stockExists.times_requested;
-      delete stockExists.id;
-      return stockExists;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    const stock = this.stockRepository.create({
+      symbol,
+      name,
+      close,
+      low,
+      open,
+      date: new Date(`${date} ${time}`),
+      high,
+      userId,
+      times_requested: 1,
+    });
+    await this.stockRepository.save(stock);
+    this.removeUnNeededStockProps(stock);
+    return stock;
   }
 }
