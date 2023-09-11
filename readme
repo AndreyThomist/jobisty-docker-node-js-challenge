@@ -8,7 +8,8 @@ Feel free to add a different JWT_SECRET and PASSWORD_SALT if you want to.
 CD inside the project-docker
 
 Run - 
-docker-compose up --build = to build the project, it should create 3 containers(POSTGRES, api-service, project-docker)
+docker-compose up --build
+to build the project, it should create 3 containers(POSTGRES, api-service, project-docker)
 ------------------------------------------------------------------------------------------------------------------------------------------
 Open in your browser 127.0.0.1:3001 then it should say the server is working
 ------------------------------------------------------------------------------------------------------------------------------------------
